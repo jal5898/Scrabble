@@ -3,6 +3,7 @@
 
 import numpy as np
 import random
+import datetime
 try:
      import cPickle as pickle
 except:
@@ -48,10 +49,11 @@ with open('/Users/Joseph/Documents/Puzzles/FiveThirtyEight/Scrabble/enable1.txt'
             maxLen = len(dictLine)
         dictionary[dictLine.upper()] = sum(tiles[c]['points'] for c in dictLine.upper())
         dictLine = dictFile.readline().strip('\n')
+
 maxLen = 15
 pop_size = 150
-n_steps = 100000
-pnt_mut_rate = 5
+n_steps = 1000
+pnt_mut_rate = 8
 swp_mut_rate = .5
 blnk_mut_rate = .2
 swp_blank_rate = .2
@@ -66,11 +68,17 @@ def gen_rand_string(n):
         strings.append(x)
     return strings
 
-strs = gen_rand_string(pop_size)
+# strs = gen_rand_string(pop_size)
+# init_pop = []
+# for s in strs:
+#     blanks = [chr(c) for c in np.random.randint(65,91,2)]
+#     init_pop.append((s,blanks))
+
+strs = ['URANICKERNLIFTRIGONEATHIREDOXYAVOWIFINENGVAJOEYELOWEDUMATHEMETICEPALSOSTOPERABIDERUTGIBLAZONSQUADS21', 'URANICKERNLIFTRIGONEATHIREDOXYAVOWIFINENGVAJOEYELOWEDUMATHEMETICEPALSOSTOPERABIDERUTGIBLAZONSQUADS21', 'URANICKERNLIFTRIGONEATHIREDOXYAVOWIFINENGVAJOEYELOWEDUMATHEMETICEPALSOSTOPERABIDERUTGIBLAZONSQUADS21', 'URANICKERNLIFTRIGONEATHIREDOXYAVOWIFINENGVAJOEYELOWEDUMATHEMETICEPALSOSTOPERABIDERUTGIBLAZONSQUADS21', 'URANICKERNLIFTRIGONEATHIREDOXYAVOWIFINENGVAJOEYELOWEDUMATHEMETICEPALSOSTOPERABIDERUTGIBLAZONSQUADS21', 'URANICKERNLIFTRIGONEATHIREDOXYAVOWIFINENGVAJOEYELOWEDUMATHEMETICEPALSOSTOPERABIDERUTGIBLAZONSQUADS21', 'URANICKERGLINTRIGONEATHIREDOXYAVOWIFINEST1AJOEYELOWEDUMATHEMETICEPALSOFTOPERABIDERU2NIBLAZONSQUADSGV', 'URANICKERGLINTRIGONEATHIREDOXYAVOWIFINEST1AJOEYELOWEDUMATHEMETICEPALSOFTOPERABIDERU2NIBLAZONSQUADSGV', 'URANICKERNLINTRIGONEATHIREDOXYAVOWIFINESTVAJOEYELOWEDUMATHEMETICEPALSOFTOPERABIDERU2GIBLAZONSQUADSG1', 'URANICKERNLINTRIGONEATHIREDOXYAVOWIFINESTVAJOEYELOWEDUMATHEMETICEPALSOFTOPERABIDERU2GIBLAZONSQUADSG1']
+blanks = [['V', 'K'], ['L', 'K'], ['L', 'W'], ['N', 'A'], ['N', 'A'], ['N', 'Q'], ['V', 'A'], ['V', 'X'], ['V', 'T'], ['V', 'T']]
 init_pop = []
-for s in strs:
-    blanks = [chr(c) for c in np.random.randint(65,91,2)]
-    init_pop.append((s,blanks))
+for s,b in zip(strs,blanks):
+    init_pop.append((list(s),b))
 
 def eval_string(string,b1,b2,maxLen):
     words = set()
@@ -203,5 +211,7 @@ def genetic_algorithm(init_pop,pop_size,n_steps,pnt_mut_rate,swp_mut_rate,blnk_m
 
 best_pop,score,population = genetic_algorithm(init_pop,pop_size,n_steps,pnt_mut_rate,swp_mut_rate,blnk_mut_rate,swp_blank_rate,n_keep)
 output = {'best_pop':best_pop,'score':score,'population':population}
-with open('scrabble_output.pickle','wb') as filename:
+time = datetime.datetime.now().strftime('%Y_%m_%d_%H%M%S')
+
+with open('scrabble_output_'+time+'.pickle','wb') as filename:
     pickle.dump(output,filename)
